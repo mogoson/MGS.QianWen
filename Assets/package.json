@@ -1,0 +1,7 @@
+{
+    "description": "AI dialog base on QianWen",
+    "displayName": "Qian Wen Hub",
+    "name": "com.mgs.qianwenhub",
+    "unity": "2021.3",
+    "version": "1.0.0"
+}

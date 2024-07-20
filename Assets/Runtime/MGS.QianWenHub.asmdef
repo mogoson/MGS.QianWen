@@ -1,0 +1,16 @@
+{
+    "name": "MGS.QianWenHub",
+    "rootNamespace": "",
+    "references": [
+        "MGS.WebRequester"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

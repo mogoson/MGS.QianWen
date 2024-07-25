@@ -17,7 +17,11 @@ namespace MGS.QianWen
     public abstract class Dialog<T> : IDialog<T>
     {
         public string Guid { get; }
-        public event Action<T, Exception> OnRespond;
+
+        public bool IsBusy { protected set; get; }
+
+        public event Action<T> OnRespond;
+        public event Action<T, Exception> OnComplete;
 
         protected string aipKey;
 
@@ -31,9 +35,14 @@ namespace MGS.QianWen
 
         public abstract void Abort();
 
-        protected void NotifyOnRespond(T answer, Exception error)
+        protected void NotifyOnRespond(T answer)
         {
-            OnRespond?.Invoke(answer, error);
+            OnRespond?.Invoke(answer);
+        }
+
+        protected void NotifyOnComplete(T answer, Exception error)
+        {
+            OnComplete?.Invoke(answer, error);
         }
     }
 }

@@ -1,8 +1,8 @@
 {
-    "name": "MGS.QianWenHub",
+    "name": "MGS.QianWen.UI",
     "rootNamespace": "",
     "references": [
-        "MGS.WebRequester"
+        "MGS.UI.Widget"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

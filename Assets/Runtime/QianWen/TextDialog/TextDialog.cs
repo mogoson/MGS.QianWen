@@ -20,35 +20,42 @@ namespace MGS.QianWen
 {
     public class TextDialog : Dialog<string>, ITextDialog
     {
+        protected const string MARK_DATA = "data:";
         protected IDictionary<string, string> header;
         protected IRequester<string> requester;
         protected int timeOut;
 
+        protected TextApi api;
         protected Encoding encoding = Encoding.UTF8;
-        protected string role = TextApiKey.ROLE_USER;
         protected List<History> history = new List<History>();
         protected string question;
 
-        public TextDialog(string aipKey, int timeOut = 60)
-            : base(aipKey)
+        public TextDialog(TextApi api, string apiKey, int timeOut = 60)
+            : base(apiKey)
         {
-            header = new Dictionary<string, string>()
-            {
-                {Headers.KEY_CONTENT_TYPE, Headers.VALUE_CONTENT_JSON},
-                {Headers.KEY_AUTHORIZATION, string.Format(Headers.VALUE_AUTHORIZATION_BEARER, aipKey) }
-            };
+            header = BuildHeads(apiKey);
+            this.api = api;
             this.timeOut = timeOut;
         }
 
         public override void Quest(string question)
         {
-            Abort();
-
+            IsBusy = true;
             this.question = question;
-            var url = TextApiKey.API_TEXT_GENERATION;
             var data = BuildInputData(question);
-            requester = WebRequester.Handler.PostRequest(url, data, timeOut, header);
+            requester = WebRequester.Handler.PostRequestAsync(api.url, data, timeOut, header);
+            requester.OnProgress += (progress, result) => Requester_OnRespond(result);
             requester.OnComplete += Requester_OnComplete;
+        }
+
+        protected virtual IDictionary<string, string> BuildHeads(string aipKey)
+        {
+            return new Dictionary<string, string>()
+            {
+                {Headers.KEY_CONTENT_TYPE, Headers.VALUE_CONTENT_JSON},
+                {Headers.KEY_AUTHORIZATION, string.Format(Headers.VALUE_AUTHORIZATION_BEARER, aipKey) },
+                {Headers.KEY_ACCEPT, Headers.VALUE_ACCEPT_TES}
+            };
         }
 
         protected byte[] BuildInputData(string question)
@@ -62,7 +69,7 @@ namespace MGS.QianWen
         {
             var message = new Message
             {
-                role = this.role,
+                role = api.role,
                 content = question
             };
             var input = new Input
@@ -72,26 +79,34 @@ namespace MGS.QianWen
             };
             var meta = new InputMeta
             {
-                model = TextApiKey.MODEL_QWEN1_5_72B_CHAT,
+                model = api.model,
                 input = input
             };
             return meta;
         }
 
+        protected void Requester_OnRespond(string reuslt)
+        {
+            var answer = ResolveAnswer(reuslt);
+            AddHistory(question, answer);
+            NotifyOnRespond(answer);
+        }
+
         protected void Requester_OnComplete(string reuslt, Exception error)
         {
-            string answer = null;
-            if (!string.IsNullOrEmpty(reuslt))
-            {
-                var meta = JsonConvert.DeserializeObject<OutputMeta>(reuslt);
-                answer = ResolveAnswer(meta);
-                AddHistory(question, answer);
-            }
-            NotifyOnRespond(answer, error);
+            IsBusy = false;
+            var answer = ResolveAnswer(reuslt);
+            AddHistory(question, answer);
+            NotifyOnComplete(answer, error);
         }
 
         protected void AddHistory(string question, string answer)
         {
+            if (string.IsNullOrEmpty(question) || string.IsNullOrEmpty(answer))
+            {
+                return;
+            }
+
             while (history.Count >= 10)
             {
                 var index = UnityEngine.Random.Range(0, history.Count - 1);
@@ -106,14 +121,41 @@ namespace MGS.QianWen
             history.Add(record);
         }
 
-        protected virtual string ResolveAnswer(OutputMeta meta)
+        protected virtual string ResolveAnswer(string reuslt)
         {
-            return meta?.output?.text;
+            if (string.IsNullOrEmpty(reuslt))
+            {
+                return null;
+            }
+
+            var lines = reuslt.Split("\n");
+            if (lines.Length == 0)
+            {
+                return null;
+            }
+
+            for (int i = lines.Length - 1; i > 0; i--)
+            {
+                var line = lines[i];
+                if (line.Contains(MARK_DATA))
+                {
+                    var json = line.Replace(MARK_DATA, string.Empty);
+                    var meta = JsonConvert.DeserializeObject<OutputMeta>(json);
+                    return meta?.output?.text;
+                }
+            }
+            return null;
         }
 
         public override void Abort()
         {
-            requester?.Abort();
+            if (requester == null)
+            {
+                return;
+            }
+
+            WebRequester.Handler.AbortAsync(requester);
+            requester = null;
         }
     }
 }

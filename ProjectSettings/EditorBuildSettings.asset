@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/QianWenHub Demo/Scenes/TextDialogDemo.unity
+    guid: b0ac8d856eaee2e40bb27c466370cda0
   m_configObjects: {}

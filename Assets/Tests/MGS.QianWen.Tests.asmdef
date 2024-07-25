@@ -1,10 +1,10 @@
 {
-    "name": "MGS.QianWenHub.Tests",
+    "name": "MGS.QianWen.Tests",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "MGS.QianWenHub"
+        "MGS.QianWen"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

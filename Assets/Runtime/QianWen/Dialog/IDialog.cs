@@ -1,7 +1,7 @@
 /*************************************************************************
  *  Copyright (C) 2024 Mogoson. All rights reserved.
  *------------------------------------------------------------------------
- *  File         :  QianWenHub.cs
+ *  File         :  IDialog.cs
  *  Description  :  Null.
  *------------------------------------------------------------------------
  *  Author       :  Mogoson
@@ -10,20 +10,22 @@
  *  Description  :  Initial development version.
  *************************************************************************/
 
+using System;
+
 namespace MGS.QianWen
 {
-    public class QianWenHub : IQianWenHub
+    public interface IDialog<T>
     {
-        protected string aipKey;
+        string Guid { get; }
 
-        public QianWenHub(string aipKey)
-        {
-            this.aipKey = aipKey;
-        }
+        bool IsBusy { get; }
 
-        public ITextDialog NewTextDialog(int timeOut = 60)
-        {
-            return new TextDialog(aipKey, timeOut);
-        }
+        event Action<T> OnRespond;
+
+        event Action<T, Exception> OnComplete;
+
+        void Quest(T question);
+
+        void Abort();
     }
 }

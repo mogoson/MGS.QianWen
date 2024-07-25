@@ -22,28 +22,12 @@ public class TextDialogTests
     const string API_KEY = "";
 
     IQianWenHub qianWenHub;
-    ITextDialog textDialog;
     bool isDone;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
         qianWenHub = new QianWenHub(API_KEY);
-        textDialog = qianWenHub.NewTextDialog();
-        textDialog.OnRespond += TextDialog_OnRespond;
-    }
-
-    private void TextDialog_OnRespond(string answer, Exception error)
-    {
-        if (error == null)
-        {
-            Debug.Log(answer);
-        }
-        else
-        {
-            Debug.LogError(error.Message);
-        }
-        isDone = true;
     }
 
     [UnityTest]
@@ -54,10 +38,25 @@ public class TextDialogTests
         var question = "This is a test question.";
         Debug.Log(question);
 
+        var textDialog = qianWenHub.NewTextDialog();
+        textDialog.OnComplete += TextDialog_OnComplete;
         textDialog.Quest(question);
         while (!isDone)
         {
             yield return null;
         }
+    }
+
+    private void TextDialog_OnComplete(string answer, Exception error)
+    {
+        if (error == null)
+        {
+            Debug.Log(answer);
+        }
+        else
+        {
+            Debug.LogError(error.Message);
+        }
+        isDone = true;
     }
 }

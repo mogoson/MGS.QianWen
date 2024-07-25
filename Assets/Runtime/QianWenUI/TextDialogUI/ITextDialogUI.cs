@@ -1,27 +1,19 @@
 /*************************************************************************
  *  Copyright (C) 2024 Mogoson. All rights reserved.
  *------------------------------------------------------------------------
- *  File         :  IDialog.cs
+ *  File         :  ITextDialogUI.cs
  *  Description  :  Null.
  *------------------------------------------------------------------------
  *  Author       :  Mogoson
  *  Version      :  1.0.0
- *  Date         :  2024/7/19
+ *  Date         :  2024/7/26
  *  Description  :  Initial development version.
  *************************************************************************/
 
-using System;
-
-namespace MGS.QianWen
+namespace MGS.QianWen.UI
 {
-    public interface IDialog<T>
+    public interface ITextDialogUI : IDialogUI<string>
     {
-        string Guid { get; }
 
-        event Action<T, Exception> OnRespond;
-
-        void Quest(T question);
-
-        void Abort();
     }
 }

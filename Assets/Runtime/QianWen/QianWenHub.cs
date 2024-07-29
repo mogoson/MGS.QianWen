@@ -10,22 +10,54 @@
  *  Description  :  Initial development version.
  *************************************************************************/
 
+using System.Collections.Generic;
+
 namespace MGS.QianWen
 {
     public class QianWenHub : IQianWenHub
     {
+        public string AppKey { set; get; }
         protected QianWenApi qianWenApi;
-        protected string aipKey;
+        protected List<IDialog> dialogs = new List<IDialog>();
 
         public QianWenHub(string aipKey)
         {
             qianWenApi = QianWenApiCfg.Load();
-            this.aipKey = aipKey;
+            AppKey = aipKey;
         }
 
-        public ITextDialog NewTextDialog(int timeOut = 60)
+        public ITextDialog CreateTextDialog(int timeOut = 60)
         {
-            return new TextDialog(qianWenApi.textApi, aipKey, timeOut);
+            var dialog = new TextDialog(qianWenApi.textApi, AppKey, timeOut);
+            dialogs.Add(dialog);
+            return dialog;
+        }
+
+        public void RemoveDialog(IDialog dialog)
+        {
+            dialog.Abort();
+            dialogs.Remove(dialog);
+        }
+
+        public void RemoveDialog(string guid)
+        {
+            foreach (var dialog in dialogs)
+            {
+                if (dialog.Guid == guid)
+                {
+                    RemoveDialog(dialog);
+                    return;
+                }
+            }
+        }
+
+        public void ClearDialogs()
+        {
+            foreach (var dialog in dialogs)
+            {
+                dialog.Abort();
+            }
+            dialogs.Clear();
         }
     }
 }

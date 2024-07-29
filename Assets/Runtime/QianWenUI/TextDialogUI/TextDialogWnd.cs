@@ -114,5 +114,15 @@ namespace MGS.QianWen.UI
             dialogs.Remove(cell);
             OnDeleteDialogEvent?.Invoke(dialog);
         }
+
+        public void CreateDialog(ListCellOpt opt)
+        {
+            listUI.AddCell(opt);
+        }
+
+        public void ClearDialog()
+        {
+            listUI.ClearCells();
+        }
     }
 }

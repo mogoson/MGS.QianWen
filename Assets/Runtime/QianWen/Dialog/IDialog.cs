@@ -14,18 +14,21 @@ using System;
 
 namespace MGS.QianWen
 {
-    public interface IDialog<T>
+    public interface IDialog
     {
         string Guid { get; }
 
         bool IsBusy { get; }
 
+        void Abort();
+    }
+
+    public interface IDialog<T> : IDialog
+    {
         event Action<T> OnRespond;
 
         event Action<T, Exception> OnComplete;
 
         void Quest(T question);
-
-        void Abort();
     }
 }

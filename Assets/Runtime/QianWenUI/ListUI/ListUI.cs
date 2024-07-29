@@ -11,7 +11,6 @@
  *************************************************************************/
 
 using System;
-using MGS.UI.Widget;
 using UnityEngine.UI;
 
 namespace MGS.QianWen.UI
@@ -49,6 +48,11 @@ namespace MGS.QianWen.UI
 
             OnCellAddClickEvent?.Invoke(cell);
             return cell;
+        }
+
+        public void ClearCells()
+        {
+            collector.Refresh(null);
         }
     }
 }

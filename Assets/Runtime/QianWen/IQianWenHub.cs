@@ -14,6 +14,14 @@ namespace MGS.QianWen
 {
     public interface IQianWenHub
     {
-        ITextDialog NewTextDialog(int timeOut = 60);
+        string AppKey { set; get; }
+
+        ITextDialog CreateTextDialog(int timeOut = 60);
+
+        void RemoveDialog(IDialog dialog);
+
+        void RemoveDialog(string guid);
+
+        void ClearDialogs();
     }
 }

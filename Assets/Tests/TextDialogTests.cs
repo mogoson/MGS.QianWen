@@ -38,7 +38,7 @@ public class TextDialogTests
         var question = "This is a test question.";
         Debug.Log(question);
 
-        var textDialog = qianWenHub.NewTextDialog();
+        var textDialog = qianWenHub.CreateTextDialog();
         textDialog.OnComplete += TextDialog_OnComplete;
         textDialog.Quest(question);
         while (!isDone)

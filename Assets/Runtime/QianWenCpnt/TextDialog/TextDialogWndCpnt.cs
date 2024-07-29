@@ -27,9 +27,6 @@ namespace MGS.QianWen.Cpnt
             this.hub = hub;
             wnd.OnCreateDialogEvent += Wnd_OnCreateDialogEvent;
             wnd.OnDeleteDialogEvent += Wnd_OnDeleteDialogEvent;
-
-            var opts = new ListCellOpt() { content = ListCellOpt.DEFAULT_CONTENT };
-            wnd.listUI.AddCell(opts);
         }
 
         private void Wnd_OnDeleteDialogEvent(TextDialogUI ui)
@@ -38,6 +35,7 @@ namespace MGS.QianWen.Cpnt
             {
                 if (cpnt.DialogUI.Equals(ui))
                 {
+                    hub.RemoveDialog(cpnt.Dialog);
                     cpnts.Remove(cpnt);
                     break;
                 }
@@ -46,9 +44,20 @@ namespace MGS.QianWen.Cpnt
 
         private void Wnd_OnCreateDialogEvent(TextDialogUI ui)
         {
-            var dialog = hub.NewTextDialog();
+            var dialog = hub.CreateTextDialog();
             var cpnt = new TextDialogCpnt(dialog, ui);
             cpnts.Add(cpnt);
+        }
+
+        public void CreateDialog()
+        {
+            var opt = new ListCellOpt() { content = ListCellOpt.DEFAULT_CONTENT };
+            wnd.CreateDialog(opt);
+        }
+
+        public void ClearDialog()
+        {
+            wnd.ClearDialog();
         }
     }
 }

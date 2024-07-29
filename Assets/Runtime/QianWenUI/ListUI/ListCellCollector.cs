@@ -24,13 +24,13 @@ namespace MGS.QianWen.UI
         {
             var cell = base.CreateCell();
             cell.OnToggleEvent += (cell, isOn) => OnToggleEvent?.Invoke(cell, isOn);
-            cell.OnDeleteEvent += OnCellDelete;
+            cell.OnDeleteEvent += RemoveCell;
             return cell;
         }
 
-        protected void OnCellDelete(ListCell cell)
+        public override void RemoveCell(ListCell cell)
         {
-            RemoveCell(cell);
+            base.RemoveCell(cell);
             OnCellDeleteEvent?.Invoke(cell);
         }
     }

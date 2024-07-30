@@ -27,8 +27,6 @@ namespace MGS.QianWen.UI
 
         void OnTip(string tip, float during);
 
-        void OnError(Exception error);
-
         void EndQuest(T answer);
     }
 }

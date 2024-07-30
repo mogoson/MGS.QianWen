@@ -32,7 +32,6 @@ namespace MGS.QianWen.UI
         public Color sendColor = Color.green;
 
         [Space]
-        public UIDialog dialogUI;
         public UITooltip tooltipUI;
         public Vector3 tipOffset = new Vector2(-50, 50);
 
@@ -117,19 +116,6 @@ namespace MGS.QianWen.UI
                 tooltipUI.SetActive(false);
             }
             StartCoroutine(DelayClose());
-        }
-
-        public void OnError(Exception error)
-        {
-            var opts = new UIDialogOption()
-            {
-                tittle = "Error",
-                closeButton = true,
-                content = error.Message,
-                yesButton = "OK"
-            };
-            dialogUI.Refresh(opts);
-            dialogUI.SetActive();
         }
 
         public void EndQuest(string answer)

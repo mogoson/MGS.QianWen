@@ -10,6 +10,7 @@
  *  Description  :  Initial development version.
  *************************************************************************/
 
+using System;
 using System.Collections.Generic;
 using MGS.QianWen.UI;
 
@@ -17,6 +18,7 @@ namespace MGS.QianWen.Cpnt
 {
     public class TextDialogWndCpnt
     {
+        public event Action<Exception> OnErrorEvent;
         protected List<TextDialogCpnt> cpnts = new List<TextDialogCpnt>();
         protected TextDialogWnd wnd;
         protected IQianWenHub hub;
@@ -46,6 +48,7 @@ namespace MGS.QianWen.Cpnt
         {
             var dialog = hub.CreateTextDialog();
             var cpnt = new TextDialogCpnt(dialog, ui);
+            cpnt.OnErrorEvent += error => OnErrorEvent?.Invoke(error);
             cpnts.Add(cpnt);
         }
 

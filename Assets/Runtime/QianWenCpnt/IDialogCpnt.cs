@@ -10,6 +10,7 @@
  *  Description  :  Initial development version.
  *************************************************************************/
 
+using System;
 using MGS.QianWen.UI;
 
 namespace MGS.QianWen.Cpnt
@@ -17,6 +18,8 @@ namespace MGS.QianWen.Cpnt
     public interface IDialogCpnt<T, K, D>
         where T : IDialog<D> where K : IDialogUI<D>
     {
+        event Action<Exception> OnErrorEvent;
+
         T Dialog { get; }
 
         K DialogUI { get; }

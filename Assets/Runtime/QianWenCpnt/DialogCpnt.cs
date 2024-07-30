@@ -18,6 +18,8 @@ namespace MGS.QianWen.Cpnt
     public class DialogCpnt<T, K, D> : IDialogCpnt<T, K, D>
         where T : IDialog<D> where K : IDialogUI<D>
     {
+        public event Action<Exception> OnErrorEvent;
+
         public T Dialog { get; }
 
         public K DialogUI { get; }
@@ -65,7 +67,7 @@ namespace MGS.QianWen.Cpnt
         {
             if (error != null && error.Message != REQUEST_ABORTED)
             {
-                DialogUI.OnError(error);
+                OnErrorEvent?.Invoke(error);
             }
             DialogUI.EndQuest(amswer);
         }

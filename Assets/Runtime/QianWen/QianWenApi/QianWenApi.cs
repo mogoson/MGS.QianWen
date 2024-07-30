@@ -14,6 +14,7 @@ namespace MGS.QianWen
 {
     public class QianWenApi
     {
+        public string apiKeyUrl;
         public TextApi textApi;
     }
 
